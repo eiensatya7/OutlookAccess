@@ -15,10 +15,11 @@
     "logs": "firebase functions:log"
   },
   "dependencies": {
+    "@google-cloud/logging": "latest",
     "actions-on-google": "^2.0.0",
     "firebase-admin": "^8.2.0",
     "firebase-functions": "^3.1.0",
-    "@google-cloud/logging": "latest",
+    "moment": "^2.24.0",
     "node-fetch": "latest"
   },
   "devDependencies": {
