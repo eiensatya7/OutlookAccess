@@ -22,9 +22,7 @@ class OutlookMeetings {
         if (meetings.length === 1) {
             return `Meeting 1 - ${meetings[0].subject} with ${this.getOrganizerName(meetings[0])}`;
         }
-        return meetings.map((meeting, index) => {
-            return `Meeting ${index + 1} - ${meeting.subject} with ${this.getOrganizerName(meeting)}`;
-        });
+        return meetings.map((meeting, index) => `Meeting ${index + 1} - ${meeting.subject} with ${this.getOrganizerName(meeting)}`);
     }
 
     formatResponseForToday(value) {
@@ -36,8 +34,9 @@ class OutlookMeetings {
     }
 
     getEventsForToday(conv, accessToken) {
-
-        fetch(utils.parameterize(API.GET_CALENDAR_VIEW, '', ''), {
+        const startDate = moment().startOf('day').format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS);
+        const endDate = moment().endOf('day').format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS);
+        fetch(utils.parameterize(API.GET_CALENDAR_VIEW, startDate, endDate), {
             headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
         }).then((res) => res.json())
             .then((json) => conv.close(this.formatResponseForToday(json)))
