@@ -6,7 +6,8 @@
   "extends": ["eslint:recommended", "google"],
   "rules": {
     "max-len" : "off",
-    "require-jsdoc" : "off"
+    "require-jsdoc" : "off",
+    "no-console" : "off"
   },
   "env": {
     "node": true

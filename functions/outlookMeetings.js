@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const moment = require('moment');
-const API = require('./constants');
+const {api} = require('./constants');
 const utils = require('./utils');
 const {Logging} = require('@google-cloud/logging');
 const logging = new Logging();
@@ -22,7 +22,9 @@ class OutlookMeetings {
         if (meetings.length === 1) {
             return `Meeting 1 - ${meetings[0].subject} with ${this.getOrganizerName(meetings[0])}`;
         }
-        return meetings.map((meeting, index) => `Meeting ${index + 1} - ${meeting.subject} with ${this.getOrganizerName(meeting)}`);
+        return meetings.map((meeting, index) => {
+            return `Meeting ${index+1} - ${meeting.subject} with ${this.getOrganizerName(meeting)}`;
+        });
     }
 
     formatResponseForToday(value) {
@@ -36,11 +38,13 @@ class OutlookMeetings {
     getEventsForToday(conv, accessToken) {
         const startDate = moment().startOf('day').format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS);
         const endDate = moment().endOf('day').format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS);
-        fetch(utils.parameterize(API.GET_CALENDAR_VIEW, startDate, endDate), {
+        const url = utils.parameterize(api.GET_CALENDAR_VIEW, startDate, endDate);
+        console.log('url is ' + url + ' this crap is ' + api.GET_CALENDAR_VIEW);
+        fetch(url, {
             headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
         }).then((res) => res.json())
             .then((json) => conv.close(this.formatResponseForToday(json)))
-            .catch((error) => logging.error('error:', error));
+            .catch((error) => console.error('error:', error));
     }
 }
 

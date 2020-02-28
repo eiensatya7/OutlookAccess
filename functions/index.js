@@ -27,11 +27,13 @@ app.intent('After SignIn', (conv, params, signin) => {
     }
 });
 
-app.intent('Check Events', (conv, params, signin) => {
-    logging.log('Signing In status' + signin.status);
-    if (signin.status === 'OK') {
+app.intent('Check Events', (conv, params) => {
+    const token = conv.user.access.token;
+    logging.log('Signing In status' + token);
+    if (token !== undefined && token !== null) {
         logging.log('Checking events');
-        outlookMeetings.getEventsForToday(conv, conv.user.access.token);
+        conv.ask(messages.CHECKING_EVENTS);
+        outlookMeetings.getEventsForToday(conv, token);
     } else {
         logging.log('Checking events failed because of sign in issue');
         conv.ask(messages.SIGNIN_FAILED_MESSAGE);
