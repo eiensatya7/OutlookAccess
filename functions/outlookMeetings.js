@@ -20,10 +20,10 @@ class OutlookMeetings {
 
     getMoreInfoAboutMeetings(meetings) {
         if (meetings.length === 1) {
-            return `Meeting 1 - ${meetings[0].subject} with ${this.getOrganizerName(meetings[0])}`;
+            return `with subject ${meetings[0].subject} with ${this.getOrganizerName(meetings[0])}`;
         }
         return meetings.map((meeting, index) => {
-            return `Meeting ${index+1} - ${meeting.subject} with ${this.getOrganizerName(meeting)}`;
+            return `Meeting ${index+1} - with subject ${meeting.subject} with ${this.getOrganizerName(meeting)}`;
         });
     }
 
