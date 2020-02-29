@@ -33,7 +33,7 @@ app.intent('Check Events', (conv, params) => {
     if (token !== undefined && token !== null) {
         logging.log('Checking events');
         conv.ask(messages.CHECKING_EVENTS);
-        outlookMeetings.getEventsForToday(conv, token);
+        return outlookMeetings.getEventsForToday(conv, token);
     } else {
         logging.log('Checking events failed because of sign in issue');
         conv.ask(messages.SIGNIN_FAILED_MESSAGE);
