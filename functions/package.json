@@ -11,7 +11,8 @@
     "serve": "firebase serve --only functions",
     "shell": "firebase experimental:functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --project outlook-integration-6a0d2",
+    "deploy:chaituAcc": "firebase deploy --project outlook-integration-6a0d2",
+    "deploy:saiAcc": "firebase deploy --project outlook-integration-39293",
     "logs": "firebase functions:log"
   },
   "dependencies": {
