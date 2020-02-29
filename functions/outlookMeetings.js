@@ -27,7 +27,7 @@ class OutlookMeetings {
         });
     }
 
-    formatResponseForToday({ value }) {
+    formatResponseForToday({value}) {
         const meetings = value;
         if (!meetings || meetings.length === 0) {
             return 'You have no meetings today!';
@@ -41,7 +41,7 @@ class OutlookMeetings {
         const url = utils.parameterize(api.GET_CALENDAR_VIEW, startDate, endDate);
         console.log('url is ' + url + ' this crap is ' + api.GET_CALENDAR_VIEW);
         return fetch(url, {
-            headers: {'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}`},
+            headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
         }).then((res) => res.json())
             .then((json) => conv.close(this.formatResponseForToday(json)))
             .catch((error) => console.error('error:', error));
