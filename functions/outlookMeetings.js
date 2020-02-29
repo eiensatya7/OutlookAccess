@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const moment = require('moment');
-const {api} = require('./constants');
+const {api, days} = require('./constants');
 const utils = require('./utils');
 const {Logging} = require('@google-cloud/logging');
 const logging = new Logging();
@@ -9,23 +9,42 @@ const logging = new Logging();
 /**
  * Outlook Integration module
  */
-class OutlookMeetings {
-    getNumberOfMeetings(meetings) {
-        return `You have ${meetings.length} ${meetings.length === 1 ? 'meeting' : 'meetings'} today`;
-    }
 
-    getOrganizerName(meeting) {
-        return meeting.organizer.emailAddress.name || 'Name not available';
-    }
+const getNumberOfMeetings = (meetings, preferredDay) => `You have ${meetings.length} ${meetings.length === 1 ? 'meeting' : 'meetings'} ${preferredDay}.`;
 
-    getMoreInfoAboutMeetings(meetings) {
-        if (meetings.length === 1) {
-            return `with subject ${meetings[0].subject} with ${this.getOrganizerName(meetings[0])}`;
-        }
-        return meetings.map((meeting, index) => {
-            return `Meeting ${index+1} - with subject ${meeting.subject} with ${this.getOrganizerName(meeting)}`;
+const getOrganizerName = (meeting) => meeting.organizer.emailAddress.name || 'Name not available.';
+
+const getMoreInfoAboutMeetings = (meetings) => {
+    if (meetings.length === 1) {
+        return `with subject ${meetings[0].subject} with ${getOrganizerName(meetings[0])}.`;
+    }
+    return meetings.map((meeting, index) => {
+        return `Meeting ${index+1} - with subject ${meeting.subject} with ${getOrganizerName(meeting)}.`;
+    });
+};
+
+const formatResponse = ({ value }, preferredDay) => {
+    const meetings = value;
+    if (!meetings || meetings.length === 0) {
+        return `You have no meetings ${preferredDay}!`;
+    }
+    return `${getNumberOfMeetings(meetings, preferredDay)} ${getMoreInfoAboutMeetings(meetings)}`;
+};
+
+
+
+const getStartAndEndOfDay = preferredDay => {
+    if(preferredDay === days.TOMORROW) {
+        return ({
+            startDate: moment().add(1, 'day').startOf('day').format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS),
+            endDate: moment().add(1, 'day').endOf('day').format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS),
         });
     }
+    return ({
+        startDate: moment().startOf('day').format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS),
+        endDate: moment().endOf('day').format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS),
+    });
+};
 
     formatResponseForToday({value}) {
         const meetings = value;
@@ -48,4 +67,6 @@ class OutlookMeetings {
     }
 }
 
-module.exports = OutlookMeetings;
+module.exports = {
+    getEventsForSpecificDay,
+};

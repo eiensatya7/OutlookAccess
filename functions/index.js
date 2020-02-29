@@ -3,12 +3,10 @@
 const {dialogflow} = require('actions-on-google');
 const {SignIn} = require('actions-on-google');
 const functions = require('firebase-functions');
-const OutlookMeetings = require('./outlookMeetings');
+const { getEventsForSpecificDay } = require('./outlookMeetings');
 const {Logging} = require('@google-cloud/logging');
-const {messages} = require('./constants');
+const {messages, days} = require('./constants');
 const logging = new Logging();
-const outlookMeetings = new OutlookMeetings();
-
 const app = dialogflow({debug: true, clientId: '6a3a9a7a-9a9f-4cd0-9add-f247b4c35797'});
 
 app.intent('Default Welcome Intent', (conv) => {
@@ -32,8 +30,8 @@ app.intent('Check Events', (conv, params) => {
     logging.log('Signing In status' + token);
     if (token) {
         logging.log('Checking events');
-        conv.ask(messages.CHECKING_EVENTS);
-        return outlookMeetings.getEventsForToday(conv, token);
+        conv.ask(`${messages.CHECKING_EVENTS} ${params['date-time'] || days.TODAY}`);
+        return getEventsForSpecificDay(conv, params, token);
     } else {
         logging.log('Checking events failed because of sign in issue');
         conv.ask(messages.SIGNIN_FAILED_MESSAGE);
