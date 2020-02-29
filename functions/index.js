@@ -30,7 +30,7 @@ app.intent('After SignIn', (conv, params, signin) => {
 app.intent('Check Events', (conv, params) => {
     const token = conv.user.access.token;
     logging.log('Signing In status' + token);
-    if (token !== undefined && token !== null) {
+    if (!token) {
         logging.log('Checking events');
         conv.ask(messages.CHECKING_EVENTS);
         return outlookMeetings.getEventsForToday(conv, token);
