@@ -6,8 +6,8 @@ const messages = {
 
 const days = {
     TODAY: 'today',
-    TOMORROW: 'tomorrow'
-}
+    TOMORROW: 'tomorrow',
+};
 
 const api = {
     GET_CALENDAR_VIEW: `https://graph.microsoft.com/v1.0/me/calendarview?StartDateTime=$1&EndDateTime=$2`,

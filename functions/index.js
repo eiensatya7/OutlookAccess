@@ -3,7 +3,7 @@
 const {dialogflow} = require('actions-on-google');
 const {SignIn} = require('actions-on-google');
 const functions = require('firebase-functions');
-const { getEventsForSpecificDay } = require('./outlookMeetings');
+const {getEventsForSpecificDay} = require('./outlookMeetings');
 const {Logging} = require('@google-cloud/logging');
 const {messages, days} = require('./constants');
 const logging = new Logging();
