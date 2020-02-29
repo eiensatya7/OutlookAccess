@@ -51,7 +51,7 @@ const getStartAndEndOfDay = preferredDay => {
         if (!meetings || meetings.length === 0) {
             return 'You have no meetings today!';
         }
-        return `${this.getNumberOfMeetings(meetings)} ${this.getMoreInfoAboutMeetings(meetings)}`;
+        return `${getNumberOfMeetings(meetings)} ${getMoreInfoAboutMeetings(meetings)}`;
     }
 
     getEventsForToday(conv, accessToken) {
@@ -62,7 +62,7 @@ const getStartAndEndOfDay = preferredDay => {
         return fetch(url, {
             headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
         }).then((res) => res.json())
-            .then((json) => conv.close(this.formatResponseForToday(json)))
+            .then((json) => conv.close(formatResponseForToday(json)))
             .catch((error) => console.error('error:', error));
     }
 }
