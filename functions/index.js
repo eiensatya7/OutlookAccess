@@ -5,8 +5,8 @@ const {SignIn} = require('actions-on-google');
 const functions = require('firebase-functions');
 const {getEventsForSpecificDay} = require('./outlookMeetings');
 const {messages, days} = require('./constants');
-const logging = console;
 const app = dialogflow({debug: true, clientId: '6a3a9a7a-9a9f-4cd0-9add-f247b4c35797'});
+const logging = console;
 
 app.intent('Default Welcome Intent', (conv) => {
     logging.log('Signing In via Oauth Flow');
