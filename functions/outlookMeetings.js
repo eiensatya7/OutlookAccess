@@ -46,20 +46,26 @@ const getStartAndEndOfDay = preferredDay => {
     });
 };
 
-    // Below function will get the events for specific day and it will defaults to current day.
-const getEventsForSpecificDay = (conv, params, accessToken) => {
-    console.log('date-time: ', params['date-time']);
-    const preferredDay = params['date-time'] || days.TODAY;
-    const { startDate, endDate } = getStartAndEndOfDay(preferredDay);
-    const url = utils.parameterize(api.GET_CALENDAR_VIEW, startDate, endDate);
-    console.log('url is ' + url + ' this crap is ' + api.GET_CALENDAR_VIEW);
-    return fetch(url, {
-        headers: {'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}`},
-    }).then((res) => res.json())
-        .then((json) => conv.ask(formatResponse(json, preferredDay)))
-        .catch((error) => console.error('error:', error));
-};
+    formatResponseForToday({value}) {
+        const meetings = value;
+        if (!meetings || meetings.length === 0) {
+            return 'You have no meetings today!';
+        }
+        return `${this.getNumberOfMeetings(meetings)} ${this.getMoreInfoAboutMeetings(meetings)}`;
+    }
 
+    getEventsForToday(conv, accessToken) {
+        const startDate = moment().startOf('day').format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS);
+        const endDate = moment().endOf('day').format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS);
+        const url = utils.parameterize(api.GET_CALENDAR_VIEW, startDate, endDate);
+        console.log('url is ' + url + ' this crap is ' + api.GET_CALENDAR_VIEW);
+        return fetch(url, {
+            headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
+        }).then((res) => res.json())
+            .then((json) => conv.close(this.formatResponseForToday(json)))
+            .catch((error) => console.error('error:', error));
+    }
+}
 
 module.exports = {
     getEventsForSpecificDay,
