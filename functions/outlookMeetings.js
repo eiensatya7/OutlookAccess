@@ -2,12 +2,8 @@ const fetch = require('node-fetch');
 const moment = require('moment');
 const {api, days} = require('./constants');
 const utils = require('./utils');
-const {Logging} = require('@google-cloud/logging');
+const logging = console;
 
-
-/**
- * Outlook Integration module
- */
 const getNumberOfMeetings = (meetings, preferredDay) => `You have ${meetings.length} ${meetings.length === 1 ? 'meeting' : 'meetings'} ${preferredDay}.`;
 
 const getOrganizerName = (meeting) => meeting.organizer.emailAddress.name || 'Name not available.';
@@ -45,16 +41,16 @@ const getStartAndEndOfDay = (preferredDay) => {
 
 // Below function will get the events for specific day and it will defaults to current day.
 const getEventsForSpecificDay = (conv, params, accessToken) => {
-    console.log('date-time: ', params['date-time']);
+    logging.log('date-time: ', params['date-time']);
     const preferredDay = params['date-time'] || days.TODAY;
     const {startDate, endDate} = getStartAndEndOfDay(preferredDay);
     const url = utils.parameterize(api.GET_CALENDAR_VIEW, startDate, endDate);
-    console.log('url is ' + url + ' this crap is ' + api.GET_CALENDAR_VIEW);
+    logging.log('url: ' + url);
     return fetch(url, {
         headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
     }).then((res) => res.json())
         .then((json) => conv.ask(formatResponse(json, preferredDay)))
-        .catch((error) => console.error('error:', error));
+        .catch((error) => logging.error('error:', error));
 };
 
 module.exports = {

@@ -4,9 +4,8 @@ const {dialogflow} = require('actions-on-google');
 const {SignIn} = require('actions-on-google');
 const functions = require('firebase-functions');
 const {getEventsForSpecificDay} = require('./outlookMeetings');
-const {Logging} = require('@google-cloud/logging');
 const {messages, days} = require('./constants');
-const logging = new Logging();
+const logging = console;
 const app = dialogflow({debug: true, clientId: '6a3a9a7a-9a9f-4cd0-9add-f247b4c35797'});
 
 app.intent('Default Welcome Intent', (conv) => {
