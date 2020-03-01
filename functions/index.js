@@ -3,9 +3,10 @@
 const {dialogflow} = require('actions-on-google');
 const {SignIn} = require('actions-on-google');
 const functions = require('firebase-functions');
-const {getEventsForSpecificDay} = require('./outlookMeetings');
+const {getEventsForSpecificDay} = require('./outlookHelper');
+const {getImportantEmails} = require('./outlookHelper');
 const {messages, days} = require('./constants');
-const app = dialogflow({debug: true, clientId: '6a3a9a7a-9a9f-4cd0-9add-f247b4c35797'});
+const app = dialogflow({debug: true, clientId: '612e8a2d-4a16-4743-912c-1cda07282c46'});
 const logging = console;
 
 app.intent('Default Welcome Intent', (conv) => {
@@ -33,6 +34,19 @@ app.intent('Check Events', (conv, params) => {
         return getEventsForSpecificDay(conv, params, token);
     } else {
         logging.log('Checking events failed because of sign in issue');
+        conv.ask(messages.SIGNIN_FAILED_MESSAGE);
+    }
+});
+
+app.intent('Get my Important emails', (conv) => {
+    const token = conv.user.access.token;
+    logging.log('Signing In status' + token);
+    if (token) {
+        logging.log('Getting Important emails');
+        conv.ask(`${messages.GETTING_EMAILS}`);
+        return getImportantEmails(conv, token);
+    } else {
+        logging.log('Getting emails failed because of sign in issue');
         conv.ask(messages.SIGNIN_FAILED_MESSAGE);
     }
 });
