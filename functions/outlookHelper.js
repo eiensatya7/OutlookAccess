@@ -53,6 +53,39 @@ const getEventsForSpecificDay = (conv, params, accessToken) => {
         .catch((error) => logging.error('error:', error));
 };
 
+// Below function will get the Important emails
+const getImportantEmails = (conv, accessToken) => {
+    const url = utils.parameterize(api.GET_IMPORTANT_EMAILS);
+    logging.log('url: ' + url);
+    return fetch(url, {
+        headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
+    }).then((res) => res.json())
+        .then((json) => conv.ask(formatEmailResponse(json)))
+        .catch((error) => logging.error('error:', error));
+};
+
+const formatEmailResponse = ({value}) => {
+    const emails = value;
+    if (!emails || emails.length === 0) {
+        return `You have no important emails!`;
+    }
+    return `${getNumberOfImpMails(emails)} ${getMoreInfoAboutImportantEmails(emails)}`;
+};
+
+const getNumberOfImpMails = (emails) => `You have ${emails.length} ${emails.length === 1 ? 'important email' : 'important emails'}.`;
+
+const getSenderName = (email) => email.sender.emailAddress.name || 'Name not available.';
+
+const getMoreInfoAboutImportantEmails = (emails) => {
+    if (emails.length === 1) {
+        return `with subject ${emails[0].subject} with ${getSenderName(emails[0])}.`;
+    }
+    return emails.map((email, index) => {
+        return `Email ${index + 1} - with subject ${email.subject} from ${getSenderName(email)}.`;
+    });
+};
+
 module.exports = {
     getEventsForSpecificDay,
+    getImportantEmails,
 };

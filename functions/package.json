@@ -13,6 +13,7 @@
     "start": "npm run shell",
     "deploy:chaituAcc": "firebase deploy --project outlook-integration-6a0d2",
     "deploy:saiAcc": "firebase deploy --project outlook-integration-39293",
+    "deploy:rahulAcc": "firebase deploy --project outlook-integration-819f9",
     "logs": "firebase functions:log"
   },
   "dependencies": {
