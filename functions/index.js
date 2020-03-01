@@ -3,7 +3,7 @@
 const {dialogflow} = require('actions-on-google');
 const {SignIn} = require('actions-on-google');
 const functions = require('firebase-functions');
-const {getEventsForSpecificDayAction, getImportantEmailsAction} = require('./outlookHelper');
+const {getEventsForSpecificDayAction, getImportantEmailsAction} = require('./apiActions');
 const {messages, days} = require('./constants');
 const app = dialogflow({debug: true, clientId: '612e8a2d-4a16-4743-912c-1cda07282c46'});
 const logging = console;
